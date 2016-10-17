@@ -1,17 +1,85 @@
-<html ng-app="helloWorld">
+<html ng-app="listaTelefonica">
+
 <head>
-	<title>Hello World</title>
-	<script src="angular.js"></script>
-	<script>
-		angular.module("helloWorld", []);
-		angular.module("helloWorld").controller("helloWorldCtrl", function ($scope) {
-			$scope.message = "Hello World!";
-		});
-	</script>
+    <title>Lista Telefonica</title>
+    <script src="angular.js"></script>
+    <link rel="stylesheet" href="../AngularJS_2_Usando_Diretivas_Parte_1/lib/bootstrap/bootstrap.css">
+    <style>
+        .jumbotron {
+            width: 400px;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .table {
+            margin-top: 20px;
+        }
+        
+        .form-control {
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        angular.module("listaTelefonica", []);
+        angular.module("listaTelefonica").controller("ListaTelefonicaCtrl", function ($scope) {
+            $scope.app = "Lista Telefonica";
+            $scope.contatos = [
+                {
+                    nome: "Pedro"
+                    , telefone: "21-9999-9999"
+                }
+                , {
+                    nome: "Maria"
+                    , telefone: "21-9999-7777"
+                }
+                , {
+                    nome: "José"
+                    , telefone: "21-9999-6666"
+                }
+            ];
+            $scope.adicionarContato = function (contato) {
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato;
+            };
+        });
+        //        diretiva
+        angular.module('listaTelefonica').directive('ngEnter', function () {
+            return function (scope, element, attrs) {
+                element.bind("keydown keypress", function (event) {
+                    if (event.which === 13) {
+                        scope.$apply(function () {
+                            scope.$eval(attrs.ngEnter);
+                        });
+                        event.preventDefault();
+                    }
+                });
+            };
+        });
+    </script>
 </head>
-<body>
-	<div ng-controller="helloWorldCtrl">
-		{{message}}
-	</div>
+
+<body ng-controller="ListaTelefonicaCtrl">
+    <div class="jumbotron">
+        <h3>{{app}}</h3>
+        <table class="table table-striped">
+            <thead>
+                <th>Nome</th>
+                <th>Telefone</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="contato in contatos">
+                    <td> {{contato.nome}} </td>
+                    <td> {{contato.telefone}} </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <input class="form-control" type="text" ng-model="contato.nome" placeholder="Nome" />
+        <input class="form-control" type="text" ng-model="contato.telefone" placeholder="Telefone" />
+        <button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-enter="adicionarContato(contato)">Adicionar Contato</button>
+    </div>
 </body>
+
 </html>
